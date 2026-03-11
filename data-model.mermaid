@@ -1,0 +1,65 @@
+erDiagram
+    PROPERTY_AGENT {
+        uuid        id              PK
+        varchar     firstName
+        varchar     lastName
+        varchar     email           UK
+        varchar     mobileNumber
+        timestamptz createdAt
+        timestamptz updatedAt
+    }
+
+    PROPERTY {
+        uuid        id              PK
+        uuid        agentId         FK
+        varchar     address
+        varchar     city
+        varchar     state
+        varchar     zipCode
+        varchar     propertyType
+        decimal     rentAmount
+        varchar     status
+        timestamptz createdAt
+        timestamptz updatedAt
+    }
+
+    FAMILY {
+        uuid        id              PK
+        uuid        propertyId      FK
+        varchar     familyName
+        date        leaseStart
+        date        leaseEnd
+        timestamptz createdAt
+        timestamptz updatedAt
+    }
+
+    TENANT {
+        uuid        id              PK
+        uuid        familyId        FK
+        varchar     firstName
+        varchar     lastName
+        varchar     email
+        varchar     phone
+        boolean     isPrimaryContact
+        timestamptz createdAt
+        timestamptz updatedAt
+    }
+
+    NOTE_REMINDER {
+        uuid        id              PK
+        uuid        agentId         FK
+        uuid        propertyId      FK "nullable"
+        varchar     title
+        text        body
+        varchar     type
+        varchar     status
+        timestamptz dueAt
+        timestamptz createdAt
+        timestamptz updatedAt
+    }
+
+    PROPERTY_AGENT ||--o{ PROPERTY        : "manages"
+    PROPERTY       ||--o{ FAMILY          : "has"
+    FAMILY         ||--o{ TENANT          : "contains"
+    PROPERTY_AGENT ||--o{ NOTE_REMINDER   : "creates"
+    PROPERTY       ||--o{ NOTE_REMINDER   : "related to"
